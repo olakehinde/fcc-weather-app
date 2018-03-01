@@ -1,35 +1,38 @@
-window.onload = function () {
-  var api = 'https://fcc-weather-api.glitch.me/api/current?lat=';
-  var latitude;
-  var longitude;
-  var address = api + latitude + "&lon" + longitude;
 
-  var x = document.getElementById("weather");
-  function getLocation() {
+var api= "https://fcc-weather-api.glitch.me/api/current?";
+var lat, lon, temp, tempInCelsius;
+
+$(document).ready(function() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.getCurrentPosition(function(position) {
+    var lat = "lat="+  position.coords.latitude;
+    var lon = "lon="+  position.coords.longitude;
+    getWeather(lat, lon);
+                                                 
+                                                 
+    }); 
     } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
+        console.log("Geolocation is not supported by this browser.");
     }
+})
+           
+  function getWeather(lat, lon) {
+    var urlstring = api + lat + '&' + lon;
+    $.ajax ({
+      url: urlstring,
+      success: function(results) {
+        console.log($("img"));
+        
+        // set the weather image to the icon returned by the api
+        $("img")[0].attributes.src.nodeValue = results.weather["0"].icon;
+        $("#city").text(results.name + " ,")
+        $("#country").text(results.sys);
+        $("#tempButton").text(results.main.temp);
+         console.log(results);
+      }
+      
+
+      
+      
+    })
   }
-
-  this function shows the longitude and latitude of your curent location
-  function showPosition(position) {
-     latitude = position.coords.latitude;
-     longitude = position.coords.longitude; 
-  }
-
-  getLocation();
-
-  .fetch(address)
-  .then(function(response) {
-    response.json()
-  })
-}
-
-
-
-
-
-
-
